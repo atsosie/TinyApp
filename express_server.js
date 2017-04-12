@@ -58,6 +58,16 @@ app.get("/u/:shortURL", (req, res) => {
   res.redirect(longURL);
 });
 
+// delete existing shortURLs
+app.post("/urls/:id/delete", (req, res) => {
+  for (var i = 0; i < urlDatabase.length; i++) {
+    if (urlDatabase[i] == urlDatabse[i]) {
+      delete urlDatbase[i];
+      res.redirect(longURL);
+    }
+  }
+})
+
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
