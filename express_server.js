@@ -1,5 +1,7 @@
 const express = require("express");
 const app = express(); // This is a function that returns an object
+const cookieParser = require("cookie-parser");
+const ejsLint = require("ejs-lint");
 var PORT = process.env.PORT || 8080; // binds to a port
 
 // Configuration
@@ -12,9 +14,9 @@ const urlDatabase = {
 
 // Middleware
 const bodyParser = require("body-parser");
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// handle GET on each of these paths
+// handle GET/POST on each of these paths
 app.get("/", (req, res) => {
   res.end("Hello!");
 });
@@ -34,7 +36,8 @@ app.get("/urls/:id", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  let templateVars = { username: req.cookies["username"] };
+  res.render("urls_new", templateVars);
 });
 
 // Does sorting order matter for GET and POST?
@@ -69,6 +72,19 @@ app.post("/urls/:id", (req, res) => {
   let longURL = req.body.longURL;
   urlDatabase[shortURL] = longURL;
   res.redirect("/urls");
+});
+
+app.post("/login", function(req, res) {
+  var user = users.find(function(user) {
+  return user.username = username;
+  res.redirect("urls/");
+  });
+});
+
+app.post("/logout", function(req, res) {
+  //req.session = null;
+  res.clearCookie("usernme");
+  res.redirect("/login");
 });
 
 app.listen(PORT, () => {

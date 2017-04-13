@@ -5,7 +5,7 @@
 </head>
 <body>
   <header>
-          <% include partials/_header %>
+          <% include partials/_header.ejs %>
   </header>
 
   <main>
@@ -20,16 +20,16 @@
       <tbody>
       <% for (let urlKey in urls) { %>
         <tr>
-          <td><%= urlKey %> -----></td>
-          <td><%= urls[urlKey] %></td>
+          <td><% urlKey %> -----></td>
+          <td><% urls[urlKey] %></td>
           <td><a href="/urls/<%= urlKey %>">Edit</a></td>
           <td>
             <form action="/urls/<%= urlKey %>/delete" method="GET" id="shortURL" type="submit" value="Delete">
-              <button>Delete</button>
+              <input type="submit" value="Delete">
             </form>
           </td>
         </tr>
-      <% } %>
+      <%} %>
       </tbody>
     </table>
   </div>
