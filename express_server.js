@@ -5,7 +5,7 @@ var PORT = process.env.PORT || 8080; // binds to a port
 // Configuration
 app.set("view engine", "ejs");
 
-var urlDatabase = {
+const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
@@ -29,7 +29,7 @@ app.get("/urls", (req, res) => {
 });
 
 app.get("/urls/:id", (req, res) => {
-  let templateVars = { shortURL: req.params.id };
+  let templateVars = { shortURL: req.params.id, longURL: urlDatabase[req.params.id] };
   res.render("urls_show", templateVars);
 });
 
@@ -39,8 +39,10 @@ app.get("/urls/new", (req, res) => {
 
 // Does sorting order matter for GET and POST?
 app.post("/urls", (req, res) => {
-  console.log(req.body);  // debug statement to see POST parameters
-  res.send("Ok");         // Respond with 'Ok' (we will replace this)
+  let longURL = req.body.longURL;
+  let shortURL = generateRandomString();
+  urlDatabase[shortURL] = longURL;
+  res.redirect("/urls");
 });
 
 // redirect to corresponding longURL
@@ -51,22 +53,15 @@ app.post("/urls", (req, res) => {
 */
 app.get("/u/:shortURL", (req, res) => {
   let longURL = urlDatabase[req.params.shortURL];
-  console.log(longURL);
-  if(longURL){
-    res.redirect(longURL);
-  }
   res.redirect(longURL);
 });
 
 // delete existing shortURLs
 app.post("/urls/:id/delete", (req, res) => {
-  for (var i = 0; i < urlDatabase.length; i++) {
-    if (urlDatabase[i] == urlDatabse[i]) {
-      delete urlDatbase[i];
-      res.redirect(longURL);
-    }
-  }
-})
+  let templateVars = { shortURL: req.params.id };
+  delete urlDatabase[templateVars.shortURL];
+    res.redirect("/urls");
+});
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
