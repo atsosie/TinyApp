@@ -11,23 +11,19 @@
 
   <main>
 
-  <table>
-    <tr>
-      <th align="left">Full URL</th><th></th><th align="left">Shortened URL</th>
-    </tr>
-    <tr>
-      <td align="left">insert url</td>
-      <td align="left"> -----> </td>
-      <td align="left">insert shortened url</td>
-    </tr>
-  </table>
-  <a href="url">Click here to shorten a new URL</a>
+    <form method="POST" action="/urls/<%= shortURL %>">
+      <h2>Short URL: <%= shortURL %></h2>
+      <p>
+        <input type="url" name="longURL" placeholder="http://" value="<%= longURL %>">
+        <button type="">Update</button>
+      </p>
+    </form>
 
   </main>
 
-<!--  <footer>
+  <footer>
           <% include partials/_footer %>
   </footer>
--->
+
 </body>
 </html>
