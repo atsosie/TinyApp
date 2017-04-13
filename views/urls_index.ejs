@@ -4,37 +4,42 @@
   <title>TinyApp</title>
 </head>
 <body>
-    <!-- Add your EJS code here -->
   <header>
           <% include partials/_header %>
   </header>
 
   <main>
-
-  <table>
-    <tr>
-      <th align="left">Short</th><th></th><th align="left">Long</th>
-    </tr>
-    <tr>
-      <td align="left">insert short url</td>
-      <td align="left"> -----> </td>
-      <td align="left">insert long url</td>
-      <td align="left">
-        <form method="POST" action="/urls/9sm5xK/delete">
-        <input type='submit' class="btn btn-default" id='submit' value='Delete'/>
-        </form>
-      </td>
-    </tr>
-  </table>
+  <div>
+    <table>
+      <thead>
+      <tr>
+        <th align="left">Short</th>
+        <th align="left">Long</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% for (let urlKey in urls) { %>
+        <tr>
+          <td><%= urlKey %></td>
+          <td><%= urls[urlKey] %></td>
+          <td>
+            <form action="/urls/<%= urlKey %>/edit" method="GET" id="shortURL" type="submit" value="Delete">
+              <button>Delete</button>
+            </form>
+          </td>
+        </tr>
+      <% } %>
+      </tbody>
+    </table>
+  </div>
   <p>
     <a href="url">Click here to shorten a new URL</a>
   </p>
-
   </main>
 
-<!--  <footer>
+  <footer>
           <% include partials/_footer %>
   </footer>
--->
+
 </body>
 </html>
