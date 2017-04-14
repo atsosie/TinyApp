@@ -19,8 +19,8 @@
       <tbody>
       <% for (let urlKey in urls) { %>
         <tr>
-          <td><% urlKey %> -----></td>
-          <td><% urls[urlKey] %></td>
+          <td><%= urlKey %> -----></td>
+          <td><%= urls[urlKey] %></td>
           <td><a href="/urls/<%= urlKey %>">Edit</a></td>
           <td>
             <form action="/urls/<%= urlKey %>/delete" method="GET" id="shortURL" type="submit" value="Delete">
@@ -28,12 +28,12 @@
             </form>
           </td>
         </tr>
-      <%} %>
+      <% } %>
       </tbody>
     </table>
   </div>
   <p>
-    <a href="url">Click here to shorten a new URL</a>
+    <a href="/urls/new">Click here to shorten a new URL</a>
   </p>
   </main>
 

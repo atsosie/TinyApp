@@ -1,9 +1,10 @@
-<h1>TinyApp</h1>
+<h1><a href="/">TinyApp</a></h1>
 
 <% if (locals.user) { %>
 <p>Logged in as: <%= user.email %></p>
 <form action="/logout" method="POST">
   <input type="submit" value="Log Out">
+  <hr>
 </form>
 <%} else {%>
 <p><em>Registered users, please log in:</em></p>
@@ -16,6 +17,8 @@
   <br>
   <input type="submit" value="Log In">
 </form>
-<p><em>Not registered yet? <a href="/register">Sign up now</em></p>
+<p>
+  <em>Not registered yet? <a href="/register">Sign up now</a></em>
+</p>
 <hr>
 <% } %>

@@ -33,7 +33,7 @@ function generateRandomString(){
   return randomString;
 }
 
-// handle GET/POST on each of these paths
+
 app.get("/", (req, res) => {
   res.end("Hello!");
 });
@@ -43,13 +43,18 @@ app.get("/urls.json", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  let templateVars = { urls: urlDatabase, user: userDatabase[req.cookies.user_id] };
+  let templateVars = {
+    urls: urlDatabase,
+    user: userDatabase[req.cookies.user_id]
+  };
   res.render("urls_index", templateVars);
 });
 
-app.get("/urls/:id", (req, res) => {
-  let templateVars = { shortURL: req.params.id, longURL: urlDatabase[req.params.id], user: userDatabase[req.cookies.user_id] };
-  res.render("urls_show", templateVars);
+app.post("/urls", (req, res) => {
+  let longURL = req.body.longURL;
+  let shortURL = generateRandomString();
+  urlDatabase[shortURL] = longURL;
+  res.redirect("/urls/" + shortURL);
 });
 
 app.get("/urls/new", (req, res) => {
@@ -57,12 +62,20 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new", templateVars);
 });
 
-// Does sorting order matter for GET and POST?
-app.post("/urls", (req, res) => {
+app.get("/urls/:id", (req, res) => {
+  let templateVars = {
+    shortURL: req.params.id,
+    longURL: urlDatabase[req.params.id],
+    user: userDatabase[req.cookies.user_id]
+  };
+  res.render("urls_show", templateVars);
+});
+
+app.post("/urls/:id", (req, res) => {
+  let shortURL = req.params.id;
   let longURL = req.body.longURL;
-  let shortURL = generateRandomString();
   urlDatabase[shortURL] = longURL;
-  res.redirect("/urls/" + shortURL);
+  res.redirect("/urls");
 });
 
 // redirect to corresponding longURL
@@ -86,15 +99,7 @@ app.post('/urls/:shortURL/delete', (req, res) => {
   res.redirect('/urls');
 });
 
-app.post("/urls/:id", (req, res) => {
-  let shortURL = req.params.id;
-  let longURL = req.body.longURL;
-  urlDatabase[shortURL] = longURL;
-  res.redirect("/urls");
-});
-
-
-// Handling cookies
+// Handling cookies and user registration
 
 app.post("/login", (req, res) => {
   const loginEmail = req.body.email;
@@ -140,7 +145,7 @@ app.post("/register", (req, res) => {
       "email": newEmail,
       "password": newPassword
     };
-    res.cookie("user_id", userDatabase[newUserId].id);
+    res.cookie("user_id", newUserId);
     console.log("cookie has been saved");
     res.redirect("/urls");
   }
