@@ -1,14 +1,21 @@
-<h1>TinyApp Header<h1>
+<h1>TinyApp</h1>
 
-<% if (!locals.username) { %>
-  <form action="/login" method="POST">
-    <label for="username">Login:</label>
-    <input id="username" type="text" name="username" placeholder="Enter your username">
-    <input type="submit" value="Login">
-  </form>
+<% if (locals.user) { %>
+<p>Logged in as: <%= user.email %></p>
+<form action="/logout" method="POST">
+  <input type="submit" value="Log Out">
+</form>
 <%} else {%>
-  <form action="/logout" method="POST">
-    <input type="submit" value="Log Out">
-  </form>
-  <p>User: <%= locals.username %></p>
-<%} %>
+<p><em>Registered users, please log in:</em></p>
+<form action="/login" method="POST">
+  <label for="email">Email:</label>
+  <input id="email" type="email" name="email" placeholder="email@email.com">
+  <br>
+  <label for="password">Password:</label>
+  <input id="password" type="password" name="password">
+  <br>
+  <input type="submit" value="Log In">
+</form>
+<p><em>Not registered yet? <a href="/register">Sign up now</em></p>
+<hr>
+<% } %>
