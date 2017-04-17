@@ -11,7 +11,7 @@
   <table>
     <tbody>
       <tr>
-      <td style="padding: 5px"><b>Tiny URL:</b> <%= shortURL %></td>
+        <td style="padding: 5px"><b>Tiny URL:</b> <%= shortURL %></td>
       </tr>
       <tr>
         <td style="padding: 5px"><b>Full URL:</b> <%= longURL %></td>
@@ -26,12 +26,20 @@
           </form>
         </td>
       </tr>
+      <tr>
       <td style="padding: 5px">
-        <form action="/urls/<%= shortURL %>/delete" method="POST" id="shortURL" type="submit" value="Delete">
-          <input type="submit" value="Delete" />
-        </form>
-      </td>
-    </table>
+          <form action="/urls/<%= shortURL %>/delete" method="POST" id="shortURL" type="submit" value="Delete">
+            <input type="submit" value="Delete" />
+          </form>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding: 5px">
+         <button style="padding: 5px"><a href="/urls/new">Add a New URL</a></button>
+       </td>
+     </tr>
+   </table>
 
-  </body>
-  </html>
+
+ </body>
+ </html>

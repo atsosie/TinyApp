@@ -22,9 +22,9 @@
             const shortURL = urlKey;
             const longURL = urls[urlKey]; %>
           <tr>
-            <td style="padding: 5px; width: 75px"><%= shortURL %></td>
-            <td style="padding: 5px; width: 75px">-----></td>
-            <td style="padding: 5px; width: 200px"><%= longURL %></td>
+            <td style="padding: 5px; width: 50px"><%= shortURL %></td>
+            <td style="padding: 5px">></td>
+            <td style="padding: 5px; width: 300px"><%= longURL %></td>
             <td style="padding: 5px"><button style="padding: 5px"><a href="/urls/<%= shortURL %>">Edit</a></button></td>
             <td style="padding: 5px">
               <form action="/urls/<%= shortURL %>/delete" method="POST" id="shortURL" type="submit" value="Delete">

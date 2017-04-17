@@ -188,11 +188,15 @@ app.post("/urls/:id/delete", (req, res) => {
   }
 });
 
-// available to general public - links shortURL with corresponding longURL
-app.get("/u/:shortURL", (req, res) => {
-  // let shortURL = ??
+// links shortURL with corresponding longURL (available to general public)
+app.get("/u/:id", (req, res) => {
+  let shortURL = req.params.id;
   let longURL = urlDatabase.shortURL.url;
-  res.redirect(longURL);
+  if (shortURL && longURL) {
+    res.redirect(longURL);
+  } else {
+    res.status(404).send("This path leads to nothing ... did you type in the address correctly?");
+  }
 });
 
 
