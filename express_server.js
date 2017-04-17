@@ -89,7 +89,7 @@ function urlsForUser(userID) {
   return userURLs;
 }
 
-// home page
+
 app.get("/", (req, res) => {
   let user = req.session.id;
   if (user && userDatabase[user]) {
@@ -110,7 +110,7 @@ app.get("/urls", (req, res) => {
   console.log("\n GET '/urls' req.session =\n", req.session);
   let templateVars = {
     userID: req.session.id,
-    email: userDatabase[req.session.id].email, //***won't show email??***
+    email: userDatabase[req.session.id].email,
     urls: urlsForUser(req.session.id)
   };
   console.log("GET '/urls' templateVars =\n", templateVars);
@@ -122,6 +122,7 @@ app.post("/urls", (req, res) => {
   var longURL = req.body.longURL;
   var shortURL = generateRandomString();
 
+  // create shortURL and add URL pair to database
   if (shortURL && longURL) {
     urlDatabase[shortURL] = {
       userID: userID,
@@ -136,7 +137,7 @@ app.post("/urls", (req, res) => {
 app.get("/urls/new", (req, res) => {
   let templateVars = {
     userID: req.session.id,
-    email: userDatabase[req.session.id].email, //***won't show email??***
+    email: userDatabase[req.session.id].email,
     urls: urlsForUser(req.session.id)
   };
   console.log("\n GET '/urls/new' req.body = \n", req.body);
@@ -158,17 +159,16 @@ app.get("/urls/:id", (req, res) => {
 });
 
 app.post("/urls/:id", (req, res) => {
-  console.log("POST to '/test/submitURL' req.body.id = ", req.body.longURL);
+  console.log("POST to '/urls/:id' req.body.id = ", req.body.longURL);
   let userID = req.session.id;
-  let longURL = req.body.longURL;
-  let shortURL = generateRandomString();
+  let updatedURL = req.body.longURL;
+  let shortURL = req.params.id;
   // check if ':id' exists in urlDatabase
   // check if ':id' matches owner
-  if (longURL) { // *** This doesn't account for invalid input, just no input ***
-    urlDatabase[shortURL] = {
-      userID: userID,
-      url: longURL
-    };
+
+  // change longURL in urlDatabase to match input from the form (req.body.longURL)
+  if (updatedURL) { // *** This doesn't account for invalid input, just no input ***
+    urlDatabase[shortURL].url = updatedURL;
     console.log("POST to '/urls/:id' urlDatabase should be updated:\n", urlDatabase);
     res.redirect("/urls/" + shortURL);
   } else {
