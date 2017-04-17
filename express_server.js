@@ -46,7 +46,8 @@ app.use(bodyParser.urlencoded({ extended: true })); //false?
 
 // confirm that visitor is logged in before continuing
 app.use("/urls*?", (req, res, next) => {
-  if (req.session.id) {
+  let user = req.session.id;
+  if (user && userDatabase[user]) {
     console.log("filtering through app.use('/urls*?') ... req.session.id = ", req.session.id);
     next();
   } else {
@@ -91,7 +92,7 @@ function urlsForUser(userID) {
 // home page
 app.get("/", (req, res) => {
   let user = req.session.id;
-  if (user) {
+  if (user && userDatabase[user]) {
     res.redirect("/urls");
   } else {
     res.redirect("/login");// *** add { error message:} and show that in template?
@@ -104,13 +105,13 @@ app.get("/urls.json", (req, res) => {
 
 // if logged in, show user's personal url index
 app.get("/urls", (req, res) => {
+  console.log("\n GET '/urls' userDatabase = ", userDatabase);
+  console.log("\n GET '/urls' req.session =\n", req.session);
   let templateVars = {
     userID: req.session.id,
     email: userDatabase[req.session.id].email, //***won't show email??***
     urls: urlsForUser(req.session.id)
   };
-  console.log("\n GET '/urls' userDatabase = ", userDatabase);
-  console.log("\n GET '/urls' req.session =\n", req.session);
   console.log("GET '/urls' templateVars =\n", templateVars);
   res.render("urls_index", templateVars);
 });
@@ -134,7 +135,7 @@ app.post("/urls", (req, res) => {
 app.get("/urls/new", (req, res) => {
   let templateVars = {
     userID: req.session.id,
-    //email: userDatabase[req.session.id].email, ***won't show email??***
+    email: userDatabase[req.session.id].email, //***won't show email??***
     urls: urlsForUser(req.session.id)
   };
   console.log("\n GET '/urls/new' req.body = \n", req.body);
@@ -184,7 +185,8 @@ app.get("/u/:shortURL", (req, res) => {
 // ----- User Registration/Login -----
 
 app.get("/register", (req, res) => {
-  if (req.session.id) {
+  let user = req.session.id;
+  if (user) {
     res.redirect('/');
   }
   res.render("register");
@@ -220,7 +222,6 @@ app.post("/register", (req, res) => { // *** Doesn't check for null values ***
   console.log("\n User added to database:\n", userDatabase);
   console.log("\n POST to '/register' req.body = \n", req.body + "\n");
   res.redirect("/");
-  // *** change '/test' to '/urls' ***
 });
 
 app.get("/login", (req, res) => {
@@ -230,20 +231,21 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
   let loginEmail = req.body.email;
   let loginPassword = req.body.password;
-
-  console.log("\n POST to '/login' req.body = \n", req.body);
+  console.log("\n POST '/login' userDatabase = ", userDatabase);
+  console.log("\n POST to '/login' req.body = ", req.body);
 
   for (let key in userDatabase) {
     let user = userDatabase[key];
-    if ((user.email === loginEmail) && (bcrypt.compareSync(loginPassword, user.password))) {
+    console.log("user = ", user);
+    if ((user.email === loginEmail)) {
+    //if ((user.email === loginEmail) && (bcrypt.compareSync(loginPassword, user.password))) { // *** Problem with bcrypt?
       req.session.id = user[userID];
       console.log("POST '/login' - User accepted. Redirecting to '/' ...");
       res.redirect("/");
-    } else {
-      console.log("POST '/login' - email or password does not match userDatabase");
-      res.status(401).send('There is a problem with your email or password. <a href="/login">Click here to try logging in again.</a><br />New user? <a href="/register">Click here to register.</a>');
     }
   }
+  console.log("POST '/login' - email or password does not match userDatabase");
+  res.status(401).send('There is a problem with your email or password. <a href="/login">Click here to try logging in again.</a><br />New user? <a href="/register">Click here to register.</a>');
 });
 
 app.post("/logout", (req, res) => {
