@@ -197,21 +197,19 @@ app.get("/register", (req, res) => {
   res.render("register");
 });
 
-app.post("/register", (req, res) => { // *** Doesn't check for null values ***
+app.post("/register", (req, res) => {
   const newEmail = req.body.email;
   const newPassword = req.body.password;
 
   if (!newEmail || !newPassword) {
-    return (() => {
-      res.status(400).send("Bad email or password. Try again.");
-    });
+    res.status(400).send("Bad email or password. Try again.");
+    return;
   }
 
   for (let key in userDatabase) {
     if (newEmail === userDatabase[key].email) {
-      return (() => {
-        res.status(400).send("Email already registered.");
-      });
+      res.status(400).send("Email already registered.");
+      return;
     }
   }
 
