@@ -6,25 +6,15 @@ const bcrypt = require("bcrypt");
 const app = express();
 
 const urlDatabase = {
-  /*
-  "b2xVn2": { userID: "user1RandomID", // key in user collection (userDatabase.userID)
-              url: "http://www.lighthouselabs.ca" },
-  "9sm5xK": { userID: "user2RandomID",
-              url: "http://www.google.com" },
-  "2lHEs5": { userID: "user1RandomID",
-              url: "http://www.example.com"}
-              */
+  "b2xVn2": { userID: "user1RandomID",
+              url: "http://www.lighthouselabs.ca" }
 };
 
 const userDatabase = {
   "user1RandomID": { userID: "user1RandomID",
                      email: "user@example.com",
-                     password: "test" },
-  "user2RandomID": { userID: "user2RandomID",
-                     email: "user2@example.com",
-                     password: "test2" }
+                     password: "test" }
 };
-
 
 // configuration and middleware
 
@@ -33,16 +23,11 @@ app.set("view engine", "ejs");
 app.use(cookieSession( {
   name: "session",
   keys: ["lighthouse"],
-  maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  maxAge: 24 * 60 * 60 * 1000
+  // 24 hours
 }));
 
-// *** Why does this break the site?? ***
-// app.use((req, res) => {
-//   res.locals.user = userDatabase[req.session.user_id];
-//   req.user = userDatabase[req.session.user_id];
-// });
-
-app.use(bodyParser.urlencoded({ extended: true })); //false?
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // confirm that visitor is logged in before continuing
 app.use("/urls*?", (req, res, next) => {
@@ -96,7 +81,7 @@ app.get("/", (req, res) => {
     res.redirect("/urls");
   } else {
     req.session = null;
-    res.redirect("/login");// *** add { error message:} and show that in template?
+    res.redirect("/login");
   }
 });
 
@@ -166,7 +151,7 @@ app.post("/urls/:id", (req, res) => {
   // check if ':id' exists in urlDatabase
   // check if ':id' matches owner
 
-  // change longURL in urlDatabase to match input from the form (req.body.longURL)
+  // change longURL in urlDatabase to match input from the form
   if (updatedURL) { // *** This doesn't account for invalid input, just no input ***
     urlDatabase[shortURL].url = updatedURL;
     console.log("POST to '/urls/:id' urlDatabase should be updated:\n", urlDatabase);
@@ -191,14 +176,12 @@ app.post("/urls/:id/delete", (req, res) => {
 // links shortURL with corresponding longURL (available to general public)
 app.get("/u/:id", (req, res) => {
   let shortURL = req.params.id;
-  let longURL = urlDatabase.shortURL.url;
-  if (shortURL && longURL) {
-    res.redirect(longURL);
-  } else {
+  if (!urlDatabase[shortURL]) {
     res.status(404).send("This path leads to nothing ... did you type in the address correctly?");
+  } else {
+    res.redirect(urlDatabase[shortURL].url);
   }
 });
-
 
 // ----- User Registration/Login -----
 
@@ -255,7 +238,7 @@ app.post("/login", (req, res) => {
   for (let userID in userDatabase) {
     let user = userDatabase[userID];
     console.log("user = ", user);
-    if ((user.email === loginEmail) && (bcrypt.compareSync(loginPassword, user.password))) { // *** Problem with bcrypt?
+    if ((user.email === loginEmail) && (bcrypt.compareSync(loginPassword, user.password))) {
       req.session.id = user.userID;
       console.log("POST '/login' - User accepted. Redirecting to '/' ...");
       res.redirect("/");
