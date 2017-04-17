@@ -107,16 +107,20 @@ app.post("/urls", (req, res) => {
   var longURL = req.body.longURL;
   var shortURL = generateRandomString();
 
-  // create shortURL and add URL pair to database
-  if (shortURL && longURL) {
-    urlDatabase[shortURL] = {
-      userID: userID,
-      url: longURL
-    };
+  if (!longURL) {
+    res.status(403).send("Type in a valid URL before submitting. Try again.");
+  } else {
+    // create shortURL and add URL pair to database
+    if (shortURL && longURL) {
+      urlDatabase[shortURL] = {
+        userID: userID,
+        url: longURL
+      };
+    }
+    console.log("\n POST to '/urls' req.body = \n", req.body);
+    console.log("urlDatabase should be updated:\n", urlDatabase);
+    res.redirect("/urls/" + shortURL);
   }
-  console.log("\n POST to '/urls' req.body = \n", req.body);
-  console.log("urlDatabase should be updated:\n", urlDatabase);
-  res.redirect("/urls/" + shortURL);
 });
 
 app.get("/urls/new", (req, res) => {
