@@ -138,17 +138,19 @@ app.get("/urls/:id", (req, res) => {
 });
 
 app.post("/urls/:id", (req, res) => {
-  console.log("POST to '/urls/:id' req.body.id = ", req.body.longURL);
-  let userID = req.session.id;
+  console.log("POST to '/urls/:id' req.body.longURL = ", req.body.longURL);
   let updatedURL = req.body.longURL;
   let shortURL = req.params.id;
-
-  if (!urlDatabase.shortURL) {
-    res.status(404).render("This Tiny URL is not in our database.");
-    return;
+  let userID = req.session.id;
+  console.log("userID = ", userID);
+  for (let urlKey in urlDatabase) {
+    if (!urlKey) {
+      res.status(404).render("This Tiny URL is not in our database.");
+      return;
+    }
   }
 
-  if (userID !== urlDatabase.shortURL.userID) {
+  if (userID !== urlDatabase[shortURL].userID) {
     res.status(403).render("You do not have permission to edit this URL.");
     return;
   }
@@ -186,12 +188,14 @@ app.get("/u/:id", (req, res) => {
   }
 });
 
+
 // ----- User Registration/Login -----
 
 app.get("/register", (req, res) => {
   let user = req.session.id;
   if (user) {
     res.redirect('/');
+    return;
   }
   res.render("register");
 });
