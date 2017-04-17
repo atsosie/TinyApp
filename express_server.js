@@ -176,6 +176,18 @@ app.post("/urls/:id", (req, res) => {
   }
 });
 
+app.post("/urls/:id/delete", (req, res) => {
+  console.log("\n POST to '/urls/:id/delete' req.body = \n", req.body);
+  let user = req.session.id;
+  let shortURL = req.params.id;
+  if (user === urlDatabase[shortURL].userID) {
+    delete urlDatabase[shortURL];
+    res.redirect("/urls");
+  } else {
+    res.status(403).send("You do not have permission to delete this link.");
+  }
+});
+
 // available to general public - links shortURL with corresponding longURL
 app.get("/u/:shortURL", (req, res) => {
   // let shortURL = ??
