@@ -150,7 +150,8 @@ app.get("/urls/:id", (req, res) => {
   let templateVars = {
     shortURL: req.params.id,
     longURL: urlDatabase[req.params.id].url,
-    userID: req.session.id
+    userID: req.session.id,
+    email: userDatabase[req.session.id].email
   };
   console.log("GET '/urls/:id' templateVars: ", templateVars);
   res.render("urls_show", templateVars);
@@ -158,7 +159,7 @@ app.get("/urls/:id", (req, res) => {
 
 app.post("/urls/:id", (req, res) => {
   console.log("POST to '/test/submitURL' req.body.id = ", req.body.longURL);
-  let userID = req.session.id; // *** fix this when checking for logged in status ***
+  let userID = req.session.id;
   let longURL = req.body.longURL;
   let shortURL = generateRandomString();
   // check if ':id' exists in urlDatabase
