@@ -95,6 +95,7 @@ app.get("/", (req, res) => {
   if (user && userDatabase[user]) {
     res.redirect("/urls");
   } else {
+    req.session = null;
     res.redirect("/login");// *** add { error message:} and show that in template?
   }
 });
@@ -234,14 +235,14 @@ app.post("/login", (req, res) => {
   console.log("\n POST '/login' userDatabase = ", userDatabase);
   console.log("\n POST to '/login' req.body = ", req.body);
 
-  for (let key in userDatabase) {
-    let user = userDatabase[key];
+  for (let userID in userDatabase) {
+    let user = userDatabase[userID];
     console.log("user = ", user);
-    if ((user.email === loginEmail)) {
-    //if ((user.email === loginEmail) && (bcrypt.compareSync(loginPassword, user.password))) { // *** Problem with bcrypt?
-      req.session.id = user[userID];
+    if ((user.email === loginEmail) && (bcrypt.compareSync(loginPassword, user.password))) { // *** Problem with bcrypt?
+      req.session.id = user.userID;
       console.log("POST '/login' - User accepted. Redirecting to '/' ...");
       res.redirect("/");
+      return;
     }
   }
   console.log("POST '/login' - email or password does not match userDatabase");
