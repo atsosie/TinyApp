@@ -40,16 +40,6 @@ app.use("/urls*?", (req, res, next) => {
   }
 });
 
-// confirm that requested path exists before continuing
-// app.use("/*?", (req, res, next) => {
-//   if (/*url exists*/) {
-//     console.log("filtering through app.use('/*?') ... req.body = ", req.body);
-//     next();
-//   } else {
-//     res.status(401).send('Oops, this path leads to nothing ... <a href="/">Click here to start over</a>');
-//   }
-// });
-
 // assign new random values to userID and shortURL
 function generateRandomString(){
   let randomString = "";
@@ -152,11 +142,20 @@ app.post("/urls/:id", (req, res) => {
   let userID = req.session.id;
   let updatedURL = req.body.longURL;
   let shortURL = req.params.id;
-  // check if ':id' exists in urlDatabase
-  // check if ':id' matches owner
+
+  if (!urlDatabase.shortURL) {
+    res.status(404).render("This Tiny URL is not in our database.");
+    return;
+  }
+
+  if (userID !== urlDatabase.shortURL.userID) {
+    res.status(403).render("You do not have permission to edit this URL.");
+    return;
+  }
 
   // change longURL in urlDatabase to match input from the form
-  if (updatedURL) { // *** This doesn't account for invalid input, just no input ***
+  // (this doesn't account for invalid input, just no input)
+  if (updatedURL) {
     urlDatabase[shortURL].url = updatedURL;
     console.log("POST to '/urls/:id' urlDatabase should be updated:\n", urlDatabase);
     res.redirect("/urls/" + shortURL);
@@ -254,6 +253,11 @@ app.post("/login", (req, res) => {
 app.post("/logout", (req, res) => {
   req.session = null;
   res.redirect("/");
+});
+
+// handle 404 errors
+app.use((req, res) => {
+  res.status(404).send("404: Page not Found");
 });
 
 app.listen(PORT, () => {
