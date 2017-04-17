@@ -3,42 +3,54 @@
 <head>
   <title>TinyApp</title>
 </head>
-<body>
+
+<body style="font-size:20px; padding:50px;">
+
   <header>
     <% include partials/_header %>
   </header>
 
   <main>
-  <div>
-    <table>
-      <thead>
-      <tr>
-        <th align="left">URLs</th>
-      </tr>
-      </thead>
-      <tbody>
-      <% for (let urlKey in urls) { %>
-        <tr>
-          <td><%= urlKey %> -----></td>
-          <td><%= urls[urlKey] %></td>
-          <td><a href="/urls/<%= urlKey %>">Edit</a></td>
-          <td>
-            <form action="/urls/<%= urlKey %>/delete" method="GET" id="shortURL" type="submit" value="Delete">
-              <input type="submit" value="Delete">
-            </form>
-          </td>
-        </tr>
+
+    <div class="container">
+      <% if (userID) { %>
+
+      <h2>My URLs</h2>
+      <table>
+        <tbody>
+          <% for (let urlKey in urls) {
+            const shortURL = urlKey;
+            const longURL = urls[urlKey]; %>
+          <tr>
+            <td style="padding: 5px; width: 75px"><%= shortURL %></td>
+            <td style="padding: 5px; width: 75px">-----></td>
+            <td style="padding: 5px; width: 200px"><%= longURL %></td>
+            <td style="padding: 5px"><button style="padding: 5px"><a href="/urls/<%= shortURL %>">Edit</a></button></td>
+            <td style="padding: 5px">
+              <form action="/urls/<%= shortURL %>/delete" method="POST" id="shortURL" type="submit" value="Delete">
+                <input type="submit" value="Delete" style="padding: 5px" />
+              </form>
+            </td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+      <p>
+        <button style="padding: 5px"><a href="/urls/new">Add a New URL</a></button>
+      </p>
+
+      <%} else {%>
+
+      <p>*User not logged in*</p>
+      <p>Log in to access user features and start creating tiny URLs!</p>
       <% } %>
-      </tbody>
-    </table>
-  </div>
-  <p>
-    <a href="/urls/new">Click here to shorten a new URL</a>
-  </p>
+
+    </div>
+
   </main>
 
   <footer>
-          <% include partials/_footer %>
+    <% include partials/_footer %>
   </footer>
 
 </body>

@@ -1,24 +1,30 @@
 <h1><a href="/">TinyApp</a></h1>
 
-<% if (locals.user) { %>
-<p>Logged in as: <%= user.email %></p>
+<hr style="margin-top:50px">
+
+<% if (userID) { %>
+
+<p>Logged in as: <%= email %></p>
 <form action="/logout" method="POST">
-  <input type="submit" value="Log Out">
-  <hr>
+  <input type="submit" value="Log Out" style="padding: 5px">
 </form>
+<br />
+<button style="padding: 5px"><a href="/urls">My Links</a></button>
+
 <%} else {%>
+
 <p><em>Registered users, please log in:</em></p>
+
 <form action="/login" method="POST">
-  <label for="email">Email:</label>
-  <input id="email" type="email" name="email" placeholder="email@email.com">
-  <br>
-  <label for="password">Password:</label>
-  <input id="password" type="password" name="password">
-  <br>
-  <input type="submit" value="Log In">
+  <label for="email">Email:</label><br>
+  <input type="email" id="email" name="email" value="" placeholder="email@example.com" style="width: 300px" /><br />
+  <label for="password">Password:</label><br>
+  <input type="password" id="password" name="password" value="" placeholder="Enter your password" /><br />
+
+  <button type="submit" style="padding: 5px">Log In</button>
 </form>
-<p>
-  <em>Not registered yet? <a href="/register">Sign up now</a></em>
-</p>
-<hr>
+
+<p><em>Not registered yet? <a href="/register">Sign up now</a></em></p>
 <% } %>
+
+<hr style="margin-top:25px; margin-bottom:50px">

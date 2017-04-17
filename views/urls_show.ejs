@@ -3,26 +3,35 @@
 <head>
   <title>TinyApp</title>
 </head>
-<body>
+<body style="font-size:20px; padding:50px;">
   <header>
     <% include partials/_header %>
   </header>
 
-  <main>
+  <table>
+    <tbody>
+      <tr>
+      <td style="padding: 5px"><b>Tiny URL:</b> <%= shortURL %></td>
+      </tr>
+      <tr>
+        <td style="padding: 5px"><b>Full URL:</b> <%= longURL %></td>
+      </tr>
+      <tr>
+        <td style="padding: 5px">
+          <form action="/urls/<%= shortURL %>" method="post" >
+            <label for="longURL">Update this URL:
+              <input id="longURL" type="url" name="longURL" value="<%= longURL %>" placeholder="http://" style="width: 300px" />
+              <input type="submit" value="Update" />
+            </label>
+          </form>
+        </td>
+      </tr>
+      <td style="padding: 5px">
+        <form action="/urls/<%= shortURL %>/delete" method="POST" id="shortURL" type="submit" value="Delete">
+          <input type="submit" value="Delete" />
+        </form>
+      </td>
+    </table>
 
-  <h2>Short URL: <%= shortURL %></h2>
-    <form action="/urls/<%= shortURL %>" method="POST">
-      <p>
-        <input type="url" name="longURL" placeholder="http://" value="<%= longURL %>">
-        <input type="submit" value="Update">
-      </p>
-    </form>
-
-  </main>
-
-  <footer>
-          <% include partials/_footer %>
-  </footer>
-
-</body>
-</html>
+  </body>
+  </html>

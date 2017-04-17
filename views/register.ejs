@@ -3,22 +3,26 @@
 <head>
   <title>TinyApp</title>
 </head>
-<body>
 
-  <main>
+<body style="font-size: 20px; padding: 50px;">
+
+  <header>
+    <h1><a href="/">TinyApp</a></h1>
+  </header>
 
   <h2>User Registration</h2>
-    <form action="/register" method="post">
-      <label for="email">Email:</label>
-      <input id="email" type="email" name="email" placeholder="email@email.com">
-      <br>
-      <label for="password">Password:</label>
-      <input id="password" type="password" name="password">
-      <br>
-      <input type="submit" value="Submit">
-    </form>
 
-  </main>
+  <form action="/register" method="POST">
+    <label for="email">Email:</label>
+    <br />
+    <input type="email" id="email" name="email" value="" placeholder="email@example.com" style="width: 300px" />
+    <br />
+    <label for="password">Password:</label>
+    <br />
+    <input type="password" id="password" name="password" value="" placeholder="Enter your password" />
+    <br />
+    <button type="submit">Submit</button>
+  </form>
 
 </body>
 </html>
