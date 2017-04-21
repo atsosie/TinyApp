@@ -4,22 +4,27 @@
   <title>TinyApp</title>
 </head>
 
-<body style="font-size: 20px; padding: 50px;">
+<body>
 
   <header>
     <h1><a href="/">TinyApp</a></h1>
   </header>
 
   <h2>New User Registration</h2>
-
   <form action="/register" method="POST">
-    <p><label for="email">Email:</label><br />
-      <input type="email" id="email" name="email" value="" placeholder="email@example.com" style="width: 300px" /></p>
-      <p><label for="password">Password:</label><br />
-        <input type="password" id="password" name="password" value="" placeholder="Enter your password" /></p>
-        <p><button style="padding: 5px" type="submit">Submit</button></p>
-      </form>
-      <p><em>Already registered? <a href="/login">Log In Here</a></em></p>
+    <div>
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" placeholder="email@example.com" />
+    </div>
+    <div>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" placeholder="Enter your password" />
+    </div>
+    <div>
+      <input type="submit" class="button" />
+    </div>
+  </form>
+  <p>Already registered? <a href="/login">Log In Here</a></p>
 
-    </body>
-    </html>
+</body>
+</html>

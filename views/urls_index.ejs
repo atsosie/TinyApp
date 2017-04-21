@@ -4,7 +4,7 @@
   <title>TinyApp</title>
 </head>
 
-<body style="font-size:20px; padding:50px;">
+<body>
 
   <header>
     <% include partials/_header %>
@@ -15,20 +15,20 @@
     <div class="container">
       <% if (userID) { %>
 
-      <h2>My URLs</h2>
+      <h1>My URLs</h1>
       <table>
         <tbody>
           <% for (let urlKey in urls) {
-            const shortURL = urlKey;
-            const longURL = urls[urlKey]; %>
+          const shortURL = urlKey;
+          const longURL = urls[urlKey]; %>
           <tr>
-            <td style="padding: 5px; width: 50px"><a href="/u/<%= shortURL %>"><%= shortURL %></a></td>
-            <td style="padding: 5px">></td>
-            <td style="padding: 5px; width: 300px"><%= longURL %></td>
-            <td style="padding: 5px"><button style="padding: 5px"><a href="/urls/<%= shortURL %>">Edit</a></button></td>
-            <td style="padding: 5px">
+          <td><a href="/u/<%= shortURL %>"><%= shortURL %></a></td>
+            <td><span>---></span></td>
+            <td><%= longURL %></td>
+            <td><a class="button" href="/urls/<%= shortURL %>">Edit</a></td>
+            <td>
               <form action="/urls/<%= shortURL %>/delete" method="POST" id="shortURL" type="submit" value="Delete">
-                <input type="submit" value="Delete" style="padding: 5px" />
+                <input type="submit" class="button" value="Delete" />
               </form>
             </td>
           </tr>
@@ -36,7 +36,7 @@
         </tbody>
       </table>
       <p>
-        <button style="padding: 5px"><a href="/urls/new">Add a New URL</a></button>
+        <a class="button" href="/urls/new">Add a New URL</a>
       </p>
 
       <%} else {%>
