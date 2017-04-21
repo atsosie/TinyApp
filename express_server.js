@@ -1,19 +1,23 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieSession = require("cookie-session");
-const PORT = process.env.PORT || 8080; // binds to a port
+const PORT = process.env.PORT || 8080;
 const bcrypt = require("bcrypt");
 const app = express();
 
 const urlDatabase = {
-  "b2xVn2": { userID: "user1RandomID",
-              url: "http://www.lighthouselabs.ca" }
+  "b2xVn2": {
+    userID: "user1RandomID",
+    url: "http://www.lighthouselabs.ca"
+  }
 };
 
 const userDatabase = {
-  "user1RandomID": { userID: "user1RandomID",
-                     email: "user@example.com",
-                     password: "test" }
+  "user1RandomID": {
+    userID: "user1RandomID",
+    email: "user@example.com",
+    password: "test"
+  }
 };
 
 // configuration and middleware
@@ -33,7 +37,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/urls*?", (req, res, next) => {
   let user = req.session.id;
   if (user && userDatabase[user]) {
-    console.log("filtering through app.use('/urls*?') ... req.session.id = ", req.session.id);
     next();
   } else {
     res.status(401).send('Please <a href="/login">Log In</a> or <a href="/register">Register</a> to continue.');
@@ -81,14 +84,11 @@ app.get("/urls.json", (req, res) => {
 
 // if logged in, show user's personal url index
 app.get("/urls", (req, res) => {
-  console.log("\n GET '/urls' userDatabase = ", userDatabase);
-  console.log("\n GET '/urls' req.session =\n", req.session);
   let templateVars = {
     userID: req.session.id,
     email: userDatabase[req.session.id].email,
     urls: urlsForUser(req.session.id)
   };
-  console.log("GET '/urls' templateVars =\n", templateVars);
   res.render("urls_index", templateVars);
 });
 
@@ -107,8 +107,6 @@ app.post("/urls", (req, res) => {
         url: longURL
       };
     }
-    console.log("\n POST to '/urls' req.body = \n", req.body);
-    console.log("urlDatabase should be updated:\n", urlDatabase);
     res.redirect("/urls/" + shortURL);
   }
 });
@@ -119,30 +117,24 @@ app.get("/urls/new", (req, res) => {
     email: userDatabase[req.session.id].email,
     urls: urlsForUser(req.session.id)
   };
-  console.log("\n GET '/urls/new' req.body = \n", req.body);
   res.render("urls_new", templateVars);
 });
 
 app.get("/urls/:id", (req, res) => {
-  console.log("\n GET '/urls/:id' req.params.id = \n" + req.params.id);
-  console.log("\n GET '/urls/:id' req.session.id = \n" + req.session.id);
-  console.log("\n GET '/urls/:id' urlDatabase = ", urlDatabase);
   let templateVars = {
     shortURL: req.params.id,
     longURL: urlDatabase[req.params.id].url,
     userID: req.session.id,
     email: userDatabase[req.session.id].email
   };
-  console.log("GET '/urls/:id' templateVars: ", templateVars);
   res.render("urls_show", templateVars);
 });
 
 app.post("/urls/:id", (req, res) => {
-  console.log("POST to '/urls/:id' req.body.longURL = ", req.body.longURL);
   let updatedURL = req.body.longURL;
   let shortURL = req.params.id;
   let userID = req.session.id;
-  console.log("userID = ", userID);
+
   for (let urlKey in urlDatabase) {
     if (!urlKey) {
       res.status(404).render("This Tiny URL is not in our database.");
@@ -159,7 +151,6 @@ app.post("/urls/:id", (req, res) => {
   // (this doesn't account for invalid input, just no input)
   if (updatedURL) {
     urlDatabase[shortURL].url = updatedURL;
-    console.log("POST to '/urls/:id' urlDatabase should be updated:\n", urlDatabase);
     res.redirect("/urls/" + shortURL);
   } else {
     res.status(403).send("Type in a valid URL before submitting. Try again.");
@@ -167,7 +158,6 @@ app.post("/urls/:id", (req, res) => {
 });
 
 app.post("/urls/:id/delete", (req, res) => {
-  console.log("\n POST to '/urls/:id/delete' req.body = \n", req.body);
   let user = req.session.id;
   let shortURL = req.params.id;
   if (user === urlDatabase[shortURL].userID) {
@@ -224,9 +214,6 @@ app.post("/register", (req, res) => {
   };
 
   req.session.id = userID;
-  console.log("'req.session.id = ", req.session.id + "\n");
-  console.log("\n User added to database:\n", userDatabase);
-  console.log("\n POST to '/register' req.body = \n", req.body + "\n");
   res.redirect("/");
 });
 
@@ -237,20 +224,15 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
   let loginEmail = req.body.email;
   let loginPassword = req.body.password;
-  console.log("\n POST '/login' userDatabase = ", userDatabase);
-  console.log("\n POST to '/login' req.body = ", req.body);
 
   for (let userID in userDatabase) {
     let user = userDatabase[userID];
-    console.log("user = ", user);
     if ((user.email === loginEmail) && (bcrypt.compareSync(loginPassword, user.password))) {
       req.session.id = user.userID;
-      console.log("POST '/login' - User accepted. Redirecting to '/' ...");
       res.redirect("/");
       return;
     }
   }
-  console.log("POST '/login' - email or password does not match userDatabase");
   res.status(401).send('There is a problem with your email or password. <a href="/login">Click here to try logging in again.</a><br />New user? <a href="/register">Click here to register.</a>');
 });
 
